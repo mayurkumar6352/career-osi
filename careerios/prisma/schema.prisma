@@ -1,0 +1,472 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String?
+  avatarUrl         String?
+  title             String?
+  location          String?
+  phone             String?
+  linkedinUrl       String?
+  githubUrl         String?
+  portfolioUrl      String?
+  bio               String?
+  resumeUrl         String?
+  targetRole        String?
+  targetSalaryMin   Int?
+  targetSalaryMax   Int?
+  targetLocations   String[]
+  targetIndustries  String[]
+  onboardingDone    Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  applications      Application[]
+  interviews        Interview[]
+  recruiters        Recruiter[]
+  networkingContacts NetworkingContact[]
+  tasks             Task[]
+  notes             Note[]
+  activities        Activity[]
+  notifications     Notification[]
+  offers            Offer[]
+  settings          UserSettings?
+  streaks           Streak[]
+
+  @@map("users")
+}
+
+model UserSettings {
+  id                        String   @id @default(cuid())
+  userId                    String   @unique
+  theme                     String   @default("system")
+  emailNotifications        Boolean  @default(true)
+  pushNotifications         Boolean  @default(true)
+  followUpReminders         Boolean  @default(true)
+  interviewReminders        Boolean  @default(true)
+  weeklyDigest              Boolean  @default(true)
+  reminderDaysBefore        Int      @default(1)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model Application {
+  id               String            @id @default(cuid())
+  userId           String
+  company          String
+  jobTitle         String
+  jobUrl           String?
+  status           ApplicationStatus @default(SAVED)
+  priority         Priority          @default(MEDIUM)
+  location         String?
+  locationType     LocationType?
+  salaryMin        Int?
+  salaryMax        Int?
+  salaryCurrency   String            @default("USD")
+  employmentType   EmploymentType?
+  jobDescription   String?
+  requirements     String?
+  benefits         String?
+  companyWebsite   String?
+  companySize      String?
+  industry         String?
+  source           String?
+  appliedDate      DateTime?
+  deadlineDate     DateTime?
+  responseDate     DateTime?
+  tags             String[]
+  skills           String[]
+  coverLetter      String?
+  resumeVersion    String?
+  referralName     String?
+  recruiterName    String?
+  hiringManagerName String?
+  notes            String?
+  healthScore      Float?
+  followUpScore    Float?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interviews   Interview[]
+  taskItems    Task[]
+  noteItems    Note[]
+  activities   Activity[]
+  offers       Offer[]
+  statusHistory ApplicationStatusHistory[]
+
+  @@map("applications")
+}
+
+model ApplicationStatusHistory {
+  id            String            @id @default(cuid())
+  applicationId String
+  fromStatus    ApplicationStatus?
+  toStatus      ApplicationStatus
+  changedAt     DateTime          @default(now())
+  note          String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("application_status_history")
+}
+
+model Interview {
+  id              String          @id @default(cuid())
+  userId          String
+  applicationId   String?
+  title           String
+  type            InterviewType   @default(PHONE_SCREEN)
+  status          InterviewStatus @default(SCHEDULED)
+  platform        String?
+  meetingUrl      String?
+  scheduledAt     DateTime
+  duration        Int             @default(60)
+  location        String?
+  interviewers    String[]
+  notes           String?
+  feedback        String?
+  rating          Int?
+  questionsAsked  String[]
+  myAnswers       String?
+  nextSteps       String?
+  prepNotes       String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  tasks       Task[]
+  activities  Activity[]
+
+  @@map("interviews")
+}
+
+model Recruiter {
+  id              String   @id @default(cuid())
+  userId          String
+  name            String
+  email           String?
+  phone           String?
+  title           String?
+  company         String?
+  linkedinUrl     String?
+  type            RecruiterType @default(RECRUITER)
+  relationshipScore Int     @default(50)
+  lastContactDate DateTime?
+  responseRate    Float?
+  notes           String?
+  tags            String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities Activity[]
+  tasks      Task[]
+
+  @@map("recruiters")
+}
+
+model NetworkingContact {
+  id              String              @id @default(cuid())
+  userId          String
+  name            String
+  email           String?
+  phone           String?
+  title           String?
+  company         String?
+  linkedinUrl     String?
+  type            NetworkingType      @default(CONNECTION)
+  relationshipHealth RelationshipHealth @default(WARM)
+  lastContactDate DateTime?
+  messagesSent    Int                 @default(0)
+  repliesReceived Int                 @default(0)
+  meetingCount    Int                 @default(0)
+  notes           String?
+  tags            String[]
+  source          String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities Activity[]
+  tasks      Task[]
+
+  @@map("networking_contacts")
+}
+
+model Offer {
+  id                String      @id @default(cuid())
+  userId            String
+  applicationId     String?
+  company           String
+  jobTitle          String
+  status            OfferStatus @default(PENDING)
+  baseSalary        Float
+  currency          String      @default("USD")
+  bonus             Float?
+  bonusType         String?
+  equity            Float?
+  equityType        String?
+  equityVestingYears Int?
+  stockOptions      Int?
+  signingBonus      Float?
+  benefits          String[]
+  remotePolicty     String?
+  workLocation      String?
+  startDate         DateTime?
+  expiryDate        DateTime?
+  ptodays           Int?
+  healthInsurance   Boolean?
+  dentalVision      Boolean?
+  retirement401k    Boolean?
+  notes             String?
+  comparisonScore   Float?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+
+  @@map("offers")
+}
+
+model Task {
+  id            String      @id @default(cuid())
+  userId        String
+  title         String
+  description   String?
+  status        TaskStatus  @default(TODO)
+  priority      Priority    @default(MEDIUM)
+  category      TaskCategory @default(GENERAL)
+  dueDate       DateTime?
+  completedAt   DateTime?
+  applicationId String?
+  interviewId   String?
+  recruiterId   String?
+  contactId     String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application?       @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  interview   Interview?         @relation(fields: [interviewId], references: [id], onDelete: SetNull)
+  recruiter   Recruiter?         @relation(fields: [recruiterId], references: [id], onDelete: SetNull)
+  contact     NetworkingContact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@map("tasks")
+}
+
+model Note {
+  id            String   @id @default(cuid())
+  userId        String
+  applicationId String?
+  content       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
+
+model Activity {
+  id            String       @id @default(cuid())
+  userId        String
+  type          ActivityType
+  title         String
+  description   String?
+  applicationId String?
+  interviewId   String?
+  recruiterId   String?
+  contactId     String?
+  metadata      Json?
+  createdAt     DateTime     @default(now())
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application?       @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  interview   Interview?         @relation(fields: [interviewId], references: [id], onDelete: SetNull)
+  recruiter   Recruiter?         @relation(fields: [recruiterId], references: [id], onDelete: SetNull)
+  contact     NetworkingContact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@map("activities")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Streak {
+  id           String   @id @default(cuid())
+  userId       String
+  date         DateTime @db.Date
+  applications Int      @default(0)
+  contacts     Int      @default(0)
+  networking   Int      @default(0)
+  prepTime     Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("streaks")
+}
+
+enum ApplicationStatus {
+  SAVED
+  APPLIED
+  ASSESSMENT
+  RECRUITER_SCREEN
+  INTERVIEW_R1
+  INTERVIEW_R2
+  FINAL_INTERVIEW
+  OFFER
+  NEGOTIATION
+  ACCEPTED
+  REJECTED
+  GHOSTED
+  ARCHIVED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum LocationType {
+  REMOTE
+  HYBRID
+  ONSITE
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum InterviewType {
+  PHONE_SCREEN
+  VIDEO_CALL
+  TECHNICAL
+  BEHAVIORAL
+  SYSTEM_DESIGN
+  TAKE_HOME
+  ONSITE
+  HR
+  FINAL
+  PANEL
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+  NO_SHOW
+}
+
+enum RecruiterType {
+  RECRUITER
+  HIRING_MANAGER
+  FOUNDER
+  HR
+  REFERRAL
+  HEADHUNTER
+}
+
+enum NetworkingType {
+  CONNECTION
+  ALUMNI
+  MENTOR
+  REFERRAL
+  COLLEAGUE
+  FRIEND
+}
+
+enum RelationshipHealth {
+  HOT
+  WARM
+  COLD
+  INACTIVE
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  NEGOTIATING
+  EXPIRED
+  RESCINDED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum TaskCategory {
+  FOLLOW_UP
+  INTERVIEW_PREP
+  NETWORKING
+  RESEARCH
+  APPLICATION
+  GENERAL
+}
+
+enum ActivityType {
+  APPLICATION_CREATED
+  APPLICATION_STATUS_CHANGED
+  APPLICATION_UPDATED
+  INTERVIEW_SCHEDULED
+  INTERVIEW_COMPLETED
+  RECRUITER_CONTACTED
+  RECRUITER_REPLIED
+  NETWORKING_MESSAGE_SENT
+  NETWORKING_REPLY
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+  OFFER_DECLINED
+  TASK_COMPLETED
+  NOTE_ADDED
+  FOLLOW_UP_SENT
+}
+
+enum NotificationType {
+  INTERVIEW_REMINDER
+  FOLLOW_UP_DUE
+  TASK_DUE
+  OFFER_EXPIRING
+  STREAK_MILESTONE
+  WEEKLY_SUMMARY
+  GENERAL
+}
