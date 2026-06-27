@@ -37,17 +37,18 @@ export interface User {
 
 export interface Application {
   id: string; userId: string; company: string; jobTitle: string;
-  jobUrl?: string | null; status: ApplicationStatus; priority: Priority;
-  location?: string | null; locationType?: LocationType | null;
-  salaryMin?: number | null; salaryMax?: number | null; salaryCurrency: string;
-  employmentType?: EmploymentType | null; jobDescription?: string | null;
-  requirements?: string | null; benefits?: string | null;
-  companyWebsite?: string | null; companySize?: string | null;
-  industry?: string | null; source?: string | null;
-  appliedDate?: Date | null; deadlineDate?: Date | null; responseDate?: Date | null;
-  tags: string[]; skills: string[]; coverLetter?: string | null;
-  resumeVersion?: string | null; notes?: string | null;
-  healthScore?: number | null; followUpScore?: number | null;
+  jobUrl: string | null; status: ApplicationStatus; priority: Priority;
+  location: string | null; locationType: LocationType | null;
+  salaryMin: number | null; salaryMax: number | null; salaryCurrency: string;
+  employmentType: EmploymentType | null; jobDescription: string | null;
+  requirements: string | null; benefits: string | null;
+  companyWebsite: string | null; companySize: string | null;
+  industry: string | null; source: string | null;
+  appliedDate: Date | null; deadlineDate: Date | null; responseDate: Date | null;
+  tags: string[]; skills: string[]; coverLetter: string | null;
+  resumeVersion: string | null; notes: string | null;
+  healthScore: number | null; followUpScore: number | null;
+  referralName: string | null; recruiterName: string | null; hiringManagerName: string | null;
   createdAt: Date; updatedAt: Date;
 }
 
