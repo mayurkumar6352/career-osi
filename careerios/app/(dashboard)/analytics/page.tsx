@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { createServerSupabase } from "@/lib/supabase";
+import { createServerSupabase } from "@/lib/supabase-server";
 import { ApplicationRepository } from "@/lib/repositories/application.repository";
 import { DashboardRepository } from "@/lib/repositories/dashboard.repository";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Analytics" };
 
 export default async function AnalyticsPage() {
-  const supabase = createServerSupabase();
+  const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 

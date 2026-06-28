@@ -2,7 +2,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { createServerSupabase } from "@/lib/supabase";
+import { createServerSupabase } from "@/lib/supabase-server";
 import { InterviewRepository } from "@/lib/repositories/interview.repository";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,7 @@ import { ArrowLeft, Calendar, Clock, Video, MapPin, Star, Users } from "lucide-r
 export const dynamic = "force-dynamic";
 
 export default async function InterviewDetailPage({ params }: { params: { id: string } }) {
-  const supabase = createServerSupabase();
+  const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 

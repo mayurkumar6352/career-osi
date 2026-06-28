@@ -1,12 +1,12 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { createServerSupabase } from "@/lib/supabase";
+import { createServerSupabase } from "@/lib/supabase-server";
 import { NetworkingRepository } from "@/lib/repositories/networking.repository";
 import { NetworkingContactSchema } from "@/lib/validators/networking";
 import type { ActionResult, NetworkingContact } from "@/types";
 
 async function getUserId() {
-  const supabase = createServerSupabase();
+  const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
   return user.id;

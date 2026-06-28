@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { createServerSupabase } from "@/lib/supabase";
+import { createServerSupabase } from "@/lib/supabase-server";
 import { DashboardRepository } from "@/lib/repositories/dashboard.repository";
 import { ApplicationRepository } from "@/lib/repositories/application.repository";
 import { InterviewRepository } from "@/lib/repositories/interview.repository";
@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
-  const supabase = createServerSupabase();
+  const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
