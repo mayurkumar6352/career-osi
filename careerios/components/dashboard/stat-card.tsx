@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { LucideIcon, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ interface StatCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
-  icon: LucideIcon;
+  icon: React.ReactNode;
   trend?: number;
   trendLabel?: string;
   color?: "blue" | "green" | "purple" | "orange" | "red" | "indigo";
@@ -25,7 +25,7 @@ const colorMap = {
   indigo: { bg: "bg-indigo-50 dark:bg-indigo-900/20", icon: "text-indigo-500", value: "text-indigo-600 dark:text-indigo-400" },
 };
 
-export function StatCard({ title, value, subtitle, icon: Icon, trend, trendLabel, color = "blue", index = 0 }: StatCardProps) {
+export function StatCard({ title, value, subtitle, icon, trend, trendLabel, color = "blue", index = 0 }: StatCardProps) {
   const colors = colorMap[color];
 
   return (
@@ -42,7 +42,7 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, trendLabel
             {subtitle && <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>}
           </div>
           <div className={cn("rounded-xl p-2.5", colors.bg)}>
-            <Icon className={cn("h-5 w-5", colors.icon)} />
+            {icon}
           </div>
         </div>
         {trend !== undefined && (

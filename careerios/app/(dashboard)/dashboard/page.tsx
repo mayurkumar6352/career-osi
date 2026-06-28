@@ -55,16 +55,16 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
-        <StatCard title="Total Applications" value={stats.totalApplications} icon={Briefcase} color="blue" index={0} />
-        <StatCard title="Active Pipeline" value={stats.activeApplications} icon={TrendingUp} color="indigo" index={1} />
-        <StatCard title="Interviews Soon" value={stats.interviewsScheduled} icon={CalendarCheck} color="purple" index={2} />
-        <StatCard title="Recruiters" value={stats.recruitersContacted} icon={Users} color="orange" index={3} />
-        <StatCard title="Network" value={stats.networkingContacts} icon={Network} color="green" index={4} />
-        <StatCard title="Response Rate" value={`${stats.responseRate}%`} icon={Target} color="blue" index={5} />
-        <StatCard title="Interview Rate" value={`${stats.interviewRate}%`} icon={CalendarCheck} color="indigo" index={6} />
-        <StatCard title="Offer Rate" value={`${stats.offerRate}%`} icon={Gift} color="green" index={7} />
-        <StatCard title="Rejection Rate" value={`${stats.rejectionRate}%`} icon={AlertCircle} color="red" index={8} />
-        <StatCard title="Tasks Due" value={stats.tasksDue} icon={Clock} color="orange" index={9} />
+        <StatCard title="Total Applications" value={stats.totalApplications} icon={<Briefcase className="h-5 w-5" />} color="blue" index={0} />
+        <StatCard title="Active Pipeline" value={stats.activeApplications} icon={<TrendingUp className="h-5 w-5" />} color="indigo" index={1} />
+        <StatCard title="Interviews Soon" value={stats.interviewsScheduled} icon={<CalendarCheck className="h-5 w-5" />} color="purple" index={2} />
+        <StatCard title="Recruiters" value={stats.recruitersContacted} icon={<Users className="h-5 w-5" />} color="orange" index={3} />
+        <StatCard title="Network" value={stats.networkingContacts} icon={<Network className="h-5 w-5" />} color="green" index={4} />
+        <StatCard title="Response Rate" value={`${stats.responseRate}%`} icon={<Target className="h-5 w-5" />} color="blue" index={5} />
+        <StatCard title="Interview Rate" value={`${stats.interviewRate}%`} icon={<CalendarCheck className="h-5 w-5" />} color="indigo" index={6} />
+        <StatCard title="Offer Rate" value={`${stats.offerRate}%`} icon={<Gift className="h-5 w-5" />} color="green" index={7} />
+        <StatCard title="Rejection Rate" value={`${stats.rejectionRate}%`} icon={<AlertCircle className="h-5 w-5" />} color="red" index={8} />
+        <StatCard title="Tasks Due" value={stats.tasksDue} icon={<Clock className="h-5 w-5" />} color="orange" index={9} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
