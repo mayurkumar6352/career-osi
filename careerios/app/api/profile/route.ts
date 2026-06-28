@@ -21,6 +21,16 @@ export async function PATCH(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const body = await req.json();
     const { email: _e, id: _i, createdAt: _c, updatedAt: _u, ...updateData } = body;
+
+    if (typeof updateData.targetIndustry === "string") {
+      updateData.targetIndustries = updateData.targetIndustry ? [updateData.targetIndustry] : [];
+      delete updateData.targetIndustry;
+    }
+    if (typeof updateData.targetLocation === "string") {
+      updateData.targetLocations = updateData.targetLocation ? [updateData.targetLocation] : [];
+      delete updateData.targetLocation;
+    }
+
     const dbUser = await prisma.user.upsert({
       where: { id: user.id },
       update: updateData,
